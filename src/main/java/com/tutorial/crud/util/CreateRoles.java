@@ -23,7 +23,7 @@ public class CreateRoles implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         Rol rolAdmin = new Rol(RolNombre.ROLE_ADMINISTRADOR);
-        Rol rolUser = new Rol(RolNombre.ROLE_PACINTE);
+        Rol rolUser = new Rol(RolNombre.ROLE_PACIENTE);
         Rol rolMedico = new Rol(RolNombre.ROLE_MEDICO);
         rolService.save(rolAdmin);
         rolService.save(rolUser);

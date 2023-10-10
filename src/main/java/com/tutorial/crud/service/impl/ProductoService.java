@@ -1,4 +1,4 @@
-package com.tutorial.crud.service;
+package com.tutorial.crud.service.impl;
 
 import com.tutorial.crud.model.Producto;
 import com.tutorial.crud.repository.ProductoRepository;

@@ -23,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,9 +46,9 @@ public class AuthController {
 
     @Autowired
     JwtProvider jwtProvider;
-
-    @PostMapping("/nuevo")
-    public ResponseEntity<?> nuevo(@Valid @RequestBody NuevoUsuario nuevoUsuario, BindingResult bindingResult){
+    LocalDateTime today = LocalDateTime.now();
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody NuevoUsuario nuevoUsuario, BindingResult bindingResult){
         if(bindingResult.hasErrors())
             return new ResponseEntity(new Mensaje("campos mal puestos o email inválido"), HttpStatus.BAD_REQUEST);
         if(usuarioService.existsByNombreUsuario(nuevoUsuario.getCorreoElectronico()))
@@ -64,9 +65,10 @@ public class AuthController {
         else if (nuevoUsuario.getRoles().contains("medico")) {
             roles.add(rolService.getByRolNombre(RolNombre.ROLE_MEDICO).get());
         }else {
-            roles.add(rolService.getByRolNombre(RolNombre.ROLE_PACINTE).get());
+            roles.add(rolService.getByRolNombre(RolNombre.ROLE_PACIENTE).get());
         }
         usuario.setRoles(roles);
+        usuario.setFechaCreacion(today);
         usuarioService.save(usuario);
         return new ResponseEntity(new Mensaje("usuario guardado"), HttpStatus.CREATED);
     }

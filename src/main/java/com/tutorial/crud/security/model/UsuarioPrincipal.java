@@ -1,5 +1,7 @@
 package com.tutorial.crud.security.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,16 +9,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Getter
+@Setter
 public class UsuarioPrincipal implements UserDetails {
-    private String nombre;
+    private String primerNombre;
     private String nombreUsuario;
     private String email;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UsuarioPrincipal(String nombre, String nombreUsuario, String email, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.nombre = nombre;
+    public UsuarioPrincipal(String primerNombre, String nombreUsuario, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.primerNombre = primerNombre;
         this.nombreUsuario = nombreUsuario;
         this.email = email;
         this.password = password;
@@ -66,7 +69,7 @@ public class UsuarioPrincipal implements UserDetails {
     }
 
     public String getNombre() {
-        return nombre;
+        return primerNombre;
     }
 
     public String getEmail() {

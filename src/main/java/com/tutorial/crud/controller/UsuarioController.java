@@ -1,0 +1,106 @@
+package com.tutorial.crud.controller;
+
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tutorial.crud.dto.Mensaje;
+import com.tutorial.crud.dto.UsuarioDTO;
+import com.tutorial.crud.mapper.UsuarioMapper;
+import com.tutorial.crud.security.enums.RolNombre;
+import com.tutorial.crud.security.model.Rol;
+import com.tutorial.crud.security.model.Usuario;
+import com.tutorial.crud.security.service.RolService;
+import com.tutorial.crud.service.interfaces.IUsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+@RestController
+@CrossOrigin(origins = "*")
+@RequestMapping("/usuario")
+public class UsuarioController {
+
+    IUsuarioService iUsuarioService;
+    @Autowired
+    RolService rolService;
+    @Autowired
+    public UsuarioController(@Qualifier("usuarioServiceImpl") IUsuarioService iUsuarioService) {
+        this.iUsuarioService = iUsuarioService;
+    }
+
+//    @PostMapping("/insert")
+//    public ResponseEntity<UsuarioDTO> createUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+//
+//        UsuarioDTO usuarioDTOCreated = UsuarioMapper.INSTANCE.usuarioToUsuarioDTO(iUsuarioService.createUsuario(usuarioDTO));
+//
+//        return new ResponseEntity<>(usuarioDTOCreated, HttpStatus.CREATED);
+//    }
+    @PutMapping("/update")
+    public ResponseEntity<UsuarioDTO> updateUsuario(@RequestBody UsuarioDTO usuarioDTO, BindingResult bindingResult) {
+        if(bindingResult.hasErrors())
+            return new ResponseEntity(new Mensaje("campos mal puestos o email inválido"), HttpStatus.BAD_REQUEST);
+        Usuario usu=iUsuarioService.updateUsuario(usuarioDTO);
+        UsuarioDTO usuarioDTOUpdate= UsuarioMapper.INSTANCE.usuarioToUsuarioDTO(usu);
+
+        if(usuarioDTOUpdate != null){
+            return new ResponseEntity<>(usuarioDTOUpdate, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
+//    @PostMapping("/login")
+//    public ResponseEntity<Object> login(@RequestBody UsuarioDTO loginRequest) {
+//        UsuarioDTO usuarioLogin = UsuarioMapper.INSTANCE.usuarioToUsuarioDTO(iUsuarioService.login(loginRequest));
+//        if (usuarioLogin != null) {
+//            // Devolver el DTO del usuario en la respuesta con el estado OK
+//            return ResponseEntity.ok(usuarioLogin);
+//        }
+//
+//        // Devolver un objeto JSON con el mensaje de error
+//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"Credenciales inválidas\"}");
+//    }
+    
+    
+
+
+    @GetMapping("/all")
+    public ResponseEntity<List<UsuarioDTO>> getUsuarios(){
+        List<Usuario> listaUsuarios = iUsuarioService.getAllUsuarios();
+        if(listaUsuarios.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(listaUsuarios.stream().map(UsuarioMapper.INSTANCE
+        ::usuarioToUsuarioDTO).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<UsuarioDTO> getById(@PathVariable(value = "id", required = true) Long aId){
+        Usuario usuario = iUsuarioService.findById(aId);
+        if(usuario ==null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(UsuarioMapper.INSTANCE.usuarioToUsuarioDTO(usuario), HttpStatus.OK);
+    }
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity<Object> deleteUsuario(@PathVariable(value = "id", required = true) Long aId) {
+        Usuario usuario = iUsuarioService.deleteUsuario(aId);
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                    .body("{\"message\": \"No existe el usuario con el id ingresado\"}");
+        }
+        
+        // Crear un objeto JSON para devolver como respuesta
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> jsonResponse = new HashMap<>();
+        jsonResponse.put("message", "Se ha eliminado el registro");
+        
+        return ResponseEntity.status(HttpStatus.OK).body(jsonResponse);
+    }
+
+}
