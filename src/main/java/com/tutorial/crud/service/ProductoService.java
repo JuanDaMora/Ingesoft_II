@@ -1,6 +1,6 @@
 package com.tutorial.crud.service;
 
-import com.tutorial.crud.entity.Producto;
+import com.tutorial.crud.model.Producto;
 import com.tutorial.crud.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

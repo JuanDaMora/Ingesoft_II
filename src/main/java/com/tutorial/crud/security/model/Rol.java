@@ -1,4 +1,4 @@
-package com.tutorial.crud.security.entity;
+package com.tutorial.crud.security.model;
 
 import com.tutorial.crud.security.enums.RolNombre;
 

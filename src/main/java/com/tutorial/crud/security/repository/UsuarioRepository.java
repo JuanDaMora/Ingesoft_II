@@ -1,6 +1,6 @@
 package com.tutorial.crud.security.repository;
 
-import com.tutorial.crud.security.entity.Usuario;
+import com.tutorial.crud.security.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

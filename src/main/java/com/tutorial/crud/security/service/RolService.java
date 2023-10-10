@@ -1,6 +1,6 @@
 package com.tutorial.crud.security.service;
 
-import com.tutorial.crud.security.entity.Rol;
+import com.tutorial.crud.security.model.Rol;
 import com.tutorial.crud.security.enums.RolNombre;
 import com.tutorial.crud.security.repository.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
